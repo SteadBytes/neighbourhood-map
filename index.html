@@ -10,7 +10,6 @@
 <body>
     <div class="sidebar">
         <input id="filter-input" type="text" data-bind="textInput:query">
-        <button id="filter-button" type="button" data-bind="click: filterLocations">Filter</button>
         <ul id="location-list" data-bind="foreach: filteredLocList">
             <li id="location" data-bind="text: name"></li>
         </ul>
