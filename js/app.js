@@ -43,12 +43,15 @@ var Location = function(data) {
 		position: this.position,
 		title: this.name
 	});
-	this.marker.addListener('click', function() {
-		if (self.infowindow.marker != this) {
-			self.infowindow.marker = this;
-			self.infowindow.open(map, this);
+
+	this.showInfowindow = function() {
+		if (self.infowindow.marker != self.marker) {
+			self.infowindow.marker = self.marker;
+			self.infowindow.open(map, self.marker);
 		}
-	});
+	};
+
+	this.marker.addListener('click', this.showInfowindow);
 
 	this.infowindow.addListener('closeclick', function() {
 		this.marker = null;

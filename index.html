@@ -11,7 +11,7 @@
     <div class="sidebar">
         <input id="filter-input" type="text" data-bind="textInput:query">
         <ul id="location-list" data-bind="foreach: filteredLocList">
-            <li id="location" data-bind="text: name"></li>
+            <li id="location" data-bind="text: name, click: showInfowindow"></li>
         </ul>
     </div>
     <div id="map"><span>Google maps could not load!</span></div>
