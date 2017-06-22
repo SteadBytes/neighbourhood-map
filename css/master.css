@@ -1,0 +1,11 @@
+.sidebar {
+    width: 200px;
+}
+
+#map {
+    height: 100%;
+    left: 200px;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+}
