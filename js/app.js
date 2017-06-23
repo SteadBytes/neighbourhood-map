@@ -45,16 +45,20 @@ var Location = function(data) {
 		"&client_secret=NG4ISOMGM4TWPESFNGHU13JJBMECMHAQFFKSX20W10EX0NNN&" +
 		"v=20170622";
 
+
+	// TODO: .fail()/ERROR HANDLING
+
 	$.getJSON(foursquareSearchURL, function(data) {
 		if (data.response.venues.length > 0) {
 			venueID = data.response.venues[0].id;
 			getVenueInfo(venueID);
 		} else {
-			self.infowindow = new google.maps.InfoWindow({
-				content: self.content,
-			});
-			addInfoWindowListeners();
+			self.content += "</div>"
+			showInfowindow();
 		}
+	}).fail(function() {
+		self.content += "</div>";
+		showInfowindow();
 	});
 
 	var getVenueInfo = function(venueID) {
@@ -91,33 +95,27 @@ var Location = function(data) {
 				self.content += "<br><img src=\"" + photoURL + "\">";
 			}
 			self.content += "</div>"
-			self.infowindow = new google.maps.InfoWindow({
-				content: self.content,
-			});
-			addInfoWindowListeners();
+		}).fail(function() {
+			self.content += "</div>";
+			showInfowindow();
 		});
 	};
-
 
 	this.marker = new google.maps.Marker({
 		position: this.position,
 		title: this.name
 	});
+	this.marker.addListener('click', function() {
+		self.showInfowindow();
+	});
 
 	this.showInfowindow = function() {
-		if (self.infowindow.marker != self.marker) {
-			self.infowindow.marker = self.marker;
-			self.infowindow.open(map, self.marker);
+		if (infowindow.marker != self.marker) {
+			infowindow.marker = self.marker;
+			infowindow.setContent(self.content);
+			infowindow.open(map, self.marker);
 		}
 	};
-	var addInfoWindowListeners = function() {
-		self.marker.addListener('click', self.showInfowindow);
-
-		self.infowindow.addListener('closeclick', function() {
-			this.marker = null;
-		});
-	};
-
 
 	this.visible = ko.observable(true);
 
@@ -130,10 +128,14 @@ var Location = function(data) {
 	})
 }
 
-// TODO: properties, foursquare for info retrieval
-
 var ViewModel = function() {
 	var self = this;
+	infowindow = new google.maps.InfoWindow({
+		content: ''
+	});
+	infowindow.addListener('closeclick', function() {
+		this.marker = null;
+	});
 	map = new google.maps.Map($('#map')[0], {
 		center: {
 			lat: 51.91850480000001,
