@@ -103,9 +103,18 @@ var Location = function(data) {
 
 	this.marker = new google.maps.Marker({
 		position: this.position,
+		animation: google.maps.Animation.DROP,
 		title: this.name
 	});
+	this.markerAnimation = ko.computed(function() {
+		if (activeMarker() == self.marker) {
+			self.marker.setAnimation(google.maps.Animation.BOUNCE);
+		} else {
+			self.marker.setAnimation(null);
+		}
+	});
 	this.marker.addListener('click', function() {
+		activeMarker(self.marker);
 		self.showInfowindow();
 	});
 
@@ -133,6 +142,7 @@ var ViewModel = function() {
 	infowindow = new google.maps.InfoWindow({
 		content: ''
 	});
+	activeMarker = ko.observable("");
 	infowindow.addListener('closeclick', function() {
 		this.marker = null;
 	});
@@ -164,7 +174,6 @@ var ViewModel = function() {
 			}
 		})
 	};
-
 }
 var appViewModel = new ViewModel();
 appViewModel.query.subscribe(appViewModel.filterLocations);
