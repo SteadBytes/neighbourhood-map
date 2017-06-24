@@ -1,11 +1,41 @@
-.sidebar {
-    width: 200px;
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.title-bar, .off-canvas {
+    background-color: #000000;
+    color: #999999;
+}
+
+.location-list input {
+    margin-top: .5rem;
+    width: 100%;
+}
+
+.location-item:hover {
+    cursor: pointer;
+}
+
+.off-canvas-content {
+    height: 100%;
+    width: 100%;
+}
+
+.off-canvas-wrapper {
+    height: 100%;
+}
+
+.map-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
 }
 
 #map {
     height: 100%;
-    left: 200px;
+    width: 100%;
     position: absolute;
-    right: 0px;
-    bottom: 0px;
 }
