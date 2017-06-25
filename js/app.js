@@ -23,7 +23,7 @@ var initialLocations = [{
 		lat: 51.8893328,
 		lng: 0.9005054
 	},
-]
+];
 /**
 *@description Knockout model for a Location
 *@constructor
@@ -102,7 +102,7 @@ var Location = function(data) {
 				var desc = data.description;
 				self.content += '<li><strong>Description:</strong> ' + desc + '</li>';
 			}
-			self.content += '</ul></div>'
+			self.content += '</ul></div>';
 			if (data.photos.count > 0) {
 				var photo = data.photos.groups[0].items[0];
 				var photoURL = photo.prefix + photo.width + 'x' + photo.height +
@@ -115,7 +115,7 @@ var Location = function(data) {
 			self.content += '<span class="subheader">' +
 				'<small>Information provided by Foursquare ' +
 				'<i class="fa fa-foursquare" aria-hidden="true"></i></small>' +
-				'</span></div>'
+				'</span></div>';
 		}).fail(function() {
 			showInfowindow();
 		});
@@ -173,8 +173,8 @@ var Location = function(data) {
 		} else {
 			self.marker.setMap(null);
 		}
-	})
-}
+	});
+};
 
 var ViewModel = function() {
 	var self = this;
@@ -227,9 +227,9 @@ var ViewModel = function() {
 				loc.visible(true);
 				self.filteredLocList.push(loc);
 			}
-		})
+		});
 	};
-}
+};
 var appViewModel = new ViewModel();
 // When query changes, filterLocations is called
 appViewModel.query.subscribe(appViewModel.filterLocations);
