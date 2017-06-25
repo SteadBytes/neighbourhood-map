@@ -113,7 +113,7 @@ var Location = function(data) {
 			}
 			// Add Foursquare attribution and close infowindow content div
 			self.content += '<span class="subheader">' +
-				'<small>Information provided by Foursquare' +
+				'<small>Information provided by Foursquare ' +
 				'<i class="fa fa-foursquare" aria-hidden="true"></i></small>' +
 				'</span></div>'
 		}).fail(function() {
