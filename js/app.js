@@ -24,7 +24,12 @@ var initialLocations = [{
 		lng: 0.9005054
 	},
 ]
-
+/**
+*@description Knockout model for a Location
+*@constructor
+*@param { object } data - Object literal containing:
+	name , lat = latitude, lng = longitude
+*/
 var Location = function(data) {
 	var self = this;
 	this.name = data.name;
@@ -32,8 +37,10 @@ var Location = function(data) {
 		lat: data.lat,
 		lng: data.lng
 	};
+	// Set default error content for infowindow incase API call fails
+	self.content = '<div>' + self.name +
+		'<hr> Couldn\'t retrieve info' + '</div>';
 
-	self.content = '<div class="card">' + self.name + '<hr> Couldn\'t retrieve info' + '<div>';
 	var foursquareSearchURL = 'https://api.foursquare.com/v2/venues/search?' +
 		'll=' + this.position.lat + ',' + this.position.lng +
 		'&query=' + this.name +
@@ -43,34 +50,40 @@ var Location = function(data) {
 		'&client_secret=NG4ISOMGM4TWPESFNGHU13JJBMECMHAQFFKSX20W10EX0NNN&' +
 		'v=20170622';
 
-
-	// TODO: .fail()/ERROR HANDLING
+	// Foursquare Search API endpoint call to retrieve ID of venue
 
 	$.getJSON(foursquareSearchURL, function(data) {
 		if (data.response.venues.length > 0) {
 			venueID = data.response.venues[0].id;
 			getVenueInfo(venueID);
 		} else {
-			self.content += '</div>'
 			showInfowindow();
 		}
 	}).fail(function() {
-		self.content += '</div>';
 		showInfowindow();
 	});
 
+	/**
+	 *@description Retrieves Foursquare venue information from venue ID
+	 *@param { string } Foursquare unique venue ID
+	 */
 	var getVenueInfo = function(venueID) {
 		var foursquareVenueURL = 'https://api.foursquare.com/v2/venues/' + venueID +
 			'?client_id=KGEL5SRKAFDQJZRQU3AW505SCRY3LSEYWYEQ2QB1AFAFJJP1' +
 			'&client_secret=NG4ISOMGM4TWPESFNGHU13JJBMECMHAQFFKSX20W10EX0NNN&' +
 			'v=20170622';
+
 		$.getJSON(foursquareVenueURL, function(data) {
 			data = data.response.venue;
-			self.content = '<div class="row column"><h5>' + self.name + '</h5><hr></div>' +
-				'<div class="row column"><ul class="no-bullet">';
+			// Begin infowindow content
+			self.content = '<div class="row column"><h5>' + self.name +
+				'</h5><hr></div>' + '<div class="row column"><ul class="no-bullet">';
+
+			//If each data item is present, append it to the infowindow content
 			if (data.url) {
 				var url = data.url;
-				self.content += '<li><strong>URL:</strong> <a href="' + url + '" target="_blank">' + url + '</a>' + '</li>';
+				self.content += '<li><strong>URL:</strong>' +
+					'<a href="' + url + '" target="_blank">' + url + '</a>' + '</li>';
 			}
 			if (data.contact.formattedPhone) {
 				var phone = data.contact.formattedPhone;
@@ -92,21 +105,44 @@ var Location = function(data) {
 			self.content += '</ul></div>'
 			if (data.photos.count > 0) {
 				var photo = data.photos.groups[0].items[0];
-				var photoURL = photo.prefix + photo.width + 'x' + photo.height + photo.suffix;
-				self.content += '<div class="row column text-center"><img class="thumbnail" id="infowindow-img" src="' + photoURL + '"></div>';
+				var photoURL = photo.prefix + photo.width + 'x' + photo.height +
+					photo.suffix;
+				self.content += '<div class="row column text-center">' +
+					'<img class="thumbnail" id="infowindow-img" src="' +
+					photoURL + '"></div>';
 			}
-			self.content += '</div>'
+			// Add Foursquare attribution and close infowindow content div
+			self.content += '<span class="subheader">' +
+				'<small>Information provided by Foursquare' +
+				'<i class="fa fa-foursquare" aria-hidden="true"></i></small>' +
+				'</span></div>'
 		}).fail(function() {
-			self.content += '</div>';
 			showInfowindow();
 		});
 	};
+
+	/**
+	 *@description Sets infowindow content and marker to current location
+	 */
+	this.showInfowindow = function() {
+		if (infowindow.marker != self.marker) {
+			infowindow.marker = self.marker;
+			infowindow.setContent(self.content);
+			activeMarker(self.marker); // Only one marker at a time is active
+			infowindow.open(map, self.marker);
+		}
+	};
+
 
 	this.marker = new google.maps.Marker({
 		position: this.position,
 		animation: google.maps.Animation.DROP,
 		title: this.name
 	});
+
+	/**
+	 *@description set animation if marker is currently selected
+	 */
 	this.markerAnimation = ko.computed(function() {
 		if (activeMarker() == self.marker) {
 			self.marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -114,7 +150,10 @@ var Location = function(data) {
 			self.marker.setAnimation(null);
 		}
 	});
+
+
 	this.marker.addListener('click', function() {
+		// Deselect marker if already selected
 		if (activeMarker() == self.marker) {
 			activeMarker(null);
 			infowindow.setMap(null);
@@ -123,17 +162,11 @@ var Location = function(data) {
 		}
 	});
 
-	this.showInfowindow = function() {
-		if (infowindow.marker != self.marker) {
-			infowindow.marker = self.marker;
-			infowindow.setContent(self.content);
-			activeMarker(self.marker);
-			infowindow.open(map, self.marker);
-		}
-	};
 
+	// Used for filtering
 	this.visible = ko.observable(true);
 
+	//Watches for visible observable and renders/removes marker appropriately
 	this.renderMarker = ko.computed(function() {
 		if (self.visible()) {
 			self.marker.setMap(map);
@@ -145,14 +178,8 @@ var Location = function(data) {
 
 var ViewModel = function() {
 	var self = this;
-	infowindow = new google.maps.InfoWindow({
-		content: '',
-		maxWidth: 400
-	});
-	activeMarker = ko.observable('');
-	infowindow.addListener('closeclick', function() {
-		this.marker = null;
-	});
+
+	// Create map centered on colchester
 	map = new google.maps.Map($('#map')[0], {
 		center: {
 			lat: 51.91850480000001,
@@ -161,20 +188,41 @@ var ViewModel = function() {
 		zoom: 13,
 	});
 
+	activeMarker = ko.observable('');
+	// Global to allows only one open infowindow at a time
+	infowindow = new google.maps.InfoWindow({
+		content: '',
+		maxWidth: 400
+	});
+
+	infowindow.addListener('closeclick', function() {
+		this.marker = null;
+	});
+
+	//All available locations
 	this.locationList = ko.observableArray([]);
+
+	//All locations to be currently displayed at any time
 	this.filteredLocList = ko.observableArray([]);
+
+	// Generate locatins
 	initialLocations.forEach(function(loc) {
 		newLoc = new Location(loc);
 		self.locationList.push(newLoc);
 		self.filteredLocList.push(newLoc);
 	});
 
+	// Query string for filtering locations
 	this.query = ko.observable('');
 
+	/**
+	 *@description updates visible locations based on filter input
+	 */
 	this.filterLocations = function() {
-		self.filteredLocList.removeAll();
+		self.filteredLocList.removeAll(); //remove all visible locatins
 		self.locationList().forEach(function(loc) {
-			loc.visible(false);
+			loc.visible(false); // Set all to not visible
+			// Filter based on name and query
 			if (loc.name.toLowerCase().indexOf(self.query().toLowerCase()) >= 0) {
 				loc.visible(true);
 				self.filteredLocList.push(loc);
@@ -183,5 +231,6 @@ var ViewModel = function() {
 	};
 }
 var appViewModel = new ViewModel();
+// When query changes, filterLocations is called
 appViewModel.query.subscribe(appViewModel.filterLocations);
 ko.applyBindings(appViewModel);

@@ -17,6 +17,11 @@ html, body {
     padding-top: calc(1em*1.5 + 2*0.5rem);
 }
 
+#location-filter {
+    /*needed to override Foundation default border radius on input groups*/
+    border-radius: 0;
+}
+
 .location-item {
     font-size: 1.1em;
 }
@@ -25,11 +30,6 @@ html, body {
     cursor: pointer;
     font-weight: bold;
     color: #ffffff;
-}
-
-#location-filter {
-    /*needed to override Foundation default border radius on input groups*/
-    border-radius: 0;
 }
 
 .off-canvas-content {
@@ -41,6 +41,9 @@ html, body {
     height: 100%;
 }
 
+
+/*Used to allow 100%W/H on google map*/
+
 .map-container {
     position: relative;
     width: 100%;
@@ -48,7 +51,7 @@ html, body {
 }
 
 
-/*Use ID selector to override google maps infowindow img default max-width:none */
+/* selector to override google maps infowindow img=default max-width:none */
 
 #infowindow-img {
     max-width: 100%;
