@@ -33,7 +33,7 @@ var Location = function(data) {
 		lng: data.lng
 	};
 
-	self.content = '<div>' + self.name + '<hr> Couldn\'t retrieve info' + '<div>';
+	self.content = '<div class="card">' + self.name + '<hr> Couldn\'t retrieve info' + '<div>';
 	var foursquareSearchURL = 'https://api.foursquare.com/v2/venues/search?' +
 		'll=' + this.position.lat + ',' + this.position.lng +
 		'&query=' + this.name +
@@ -66,31 +66,34 @@ var Location = function(data) {
 			'v=20170622';
 		$.getJSON(foursquareVenueURL, function(data) {
 			data = data.response.venue;
-			self.content = '<div>' + self.name + '<hr>';
+			self.content = '<div class="row column"><h5>' + self.name + '</h5><hr></div>' +
+				'<div class="row column"><ul class="no-bullet">';
+			if (data.url) {
+				var url = data.url;
+				self.content += '<li><strong>URL:</strong> <a href="' + url + '" target="_blank">' + url + '</a>' + '</li>';
+			}
 			if (data.contact.formattedPhone) {
 				var phone = data.contact.formattedPhone;
-				self.content += 'Phone: ' + phone;
+				self.content += '<li><strong>Phone:</strong> ' + phone + '</li>';
 			}
 			if (data.location.formattedAddress) {
 				var address = data.location.formattedAddress;
-				self.content += '<br>Address: ' + address;
+				self.content += '<li><strong>Address:</strong> ' + address + '</li>';
 			}
 			if (data.categories[0].name) {
 				var category = data.categories[0].name;
-				self.content += '<br>Category: ' + category;
+				self.content += '<li><strong>Category:</strong> ' + category + '</li>';
 			}
-			if (data.url) {
-				var url = data.url;
-				self.content += '<br>URL: <a href="' + url + '" target="_blank">' + url + '</a>';
-			}
+
 			if (data.description) {
 				var desc = data.description;
-				self.content += '<br>Description: ' + desc;
+				self.content += '<li><strong>Description:</strong> ' + desc + '</li>';
 			}
+			self.content += '</ul></div>'
 			if (data.photos.count > 0) {
 				var photo = data.photos.groups[0].items[0];
 				var photoURL = photo.prefix + photo.width + 'x' + photo.height + photo.suffix;
-				self.content += '<br><img src="' + photoURL + '">';
+				self.content += '<div class="row column text-center"><img class="thumbnail" id="infowindow-img" src="' + photoURL + '"></div>';
 			}
 			self.content += '</div>'
 		}).fail(function() {
@@ -143,7 +146,8 @@ var Location = function(data) {
 var ViewModel = function() {
 	var self = this;
 	infowindow = new google.maps.InfoWindow({
-		content: ''
+		content: '',
+		maxWidth: 400
 	});
 	activeMarker = ko.observable('');
 	infowindow.addListener('closeclick', function() {

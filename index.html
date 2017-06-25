@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>Neighbourhood Map</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link rel="stylesheet" href="css/lib/foundation.min.css">
     <link rel="stylesheet" href="css/master.css">
     <script src="https://use.fontawesome.com/31888f4c6e.js"></script>
@@ -13,7 +14,10 @@
     <div class="off-canvas-wrapper">
         <div class="off-canvas position-left reveal-for-medium" id="offCanvas" data-off-canvas>
             <div class="row">
-                <input class="location-filter" type="search" data-bind="textInput:query" placeholder="Filter">
+                <div class="input-group">
+                    <input class="input-group-field" id="location-filter" type="text" data-bind="textInput:query" placeholder="Filter">
+                    <span class="input-group-label"><i class="fa fa-filter" aria-hidden="true"></i></span>
+                </div>
             </div>
             <div class="row column">
                 <ul class="vertical menu location-list" data-bind="foreach: filteredLocList">
