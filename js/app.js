@@ -237,3 +237,8 @@ var init = function() {
 	appViewModel.query.subscribe(appViewModel.filterLocations);
 	ko.applyBindings(appViewModel);
 };
+
+var asyncError = function() {
+	alert("Google Maps API is unable to load. Please try again :)");
+
+};
