@@ -153,6 +153,7 @@ var Location = function(data) {
 
 
 	this.marker.addListener('click', function() {
+		map.setCenter(self.marker.getPosition());
 		// Deselect marker if already selected
 		if (activeMarker() == self.marker) {
 			activeMarker(null);

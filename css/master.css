@@ -1,51 +1,68 @@
-html, body {
-    height: 100%;
-    background-color: black;
-    width: 100%;
-    margin: 0px;
-    padding: 0px;
+html,
+body
+{
     font-family: 'Open Sans', sans-serif;
+
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+
+    background-color: black;
 }
 
-.title-bar, .off-canvas {
+.title-bar,
+.off-canvas
+{
     font-size: 1em;
-    background-color: #000000;
-    color: #999999;
+
+    color: #999;
+    background-color: #000;
 }
 
-.off-canvas {
-    padding-top: calc(1em*1.5 + 2*0.5rem);
+.off-canvas
+{
+    padding-top: calc(1em*1.5 + 2*.5rem);
 }
 
-#location-filter {
+#location-filter
+{
     /*needed to override Foundation default border radius on input groups*/
     border-radius: 0;
 }
 
-.location-item {
+.location-item
+{
     font-size: 1.1em;
 }
 
-.location-item:hover {
-    cursor: pointer;
+.location-item:hover
+{
     font-weight: bold;
-    color: #ffffff;
+
+    cursor: pointer;
+
+    color: #fff;
 }
 
-.off-canvas-content {
-    height: 100%;
+.off-canvas-content
+{
     width: 100%;
+    height: 100%;
 }
 
-.off-canvas-wrapper {
+.off-canvas-wrapper
+{
     height: 100%;
 }
 
 
 /*Used to allow 100%W/H on google map*/
 
-.map-container {
+.map-container
+{
     position: relative;
+
     width: 100%;
     height: 100%;
 }
@@ -53,13 +70,16 @@ html, body {
 
 /* selector to override google maps infowindow img=default max-width:none */
 
-#infowindow-img {
+#infowindow-img
+{
     max-width: 100%;
     max-height: 400px;
 }
 
-#map {
-    height: 100%;
-    width: 100%;
+#map
+{
     position: absolute;
+
+    width: 100%;
+    height: 100%;
 }
