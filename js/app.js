@@ -145,6 +145,7 @@ var Location = function(data) {
 	 */
 	this.markerAnimation = ko.computed(function() {
 		if (activeMarker() == self.marker) {
+			map.setCenter(self.marker.getPosition());
 			self.marker.setAnimation(google.maps.Animation.BOUNCE);
 		} else {
 			self.marker.setAnimation(null);
@@ -153,7 +154,6 @@ var Location = function(data) {
 
 
 	this.marker.addListener('click', function() {
-		map.setCenter(self.marker.getPosition());
 		// Deselect marker if already selected
 		if (activeMarker() == self.marker) {
 			activeMarker(null);
