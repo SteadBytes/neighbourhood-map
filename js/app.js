@@ -236,4 +236,4 @@ var init = function() {
 	// When query changes, filterLocations is called
 	appViewModel.query.subscribe(appViewModel.filterLocations);
 	ko.applyBindings(appViewModel);
-}
+};
