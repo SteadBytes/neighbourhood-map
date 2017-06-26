@@ -57,10 +57,10 @@ var Location = function(data) {
 			venueID = data.response.venues[0].id;
 			getVenueInfo(venueID);
 		} else {
-			showInfowindow();
+			self.showInfowindow();
 		}
 	}).fail(function() {
-		showInfowindow();
+		self.showInfowindow();
 	});
 
 	/**
@@ -117,7 +117,7 @@ var Location = function(data) {
 				'<i class="fa fa-foursquare" aria-hidden="true"></i></small>' +
 				'</span></div>';
 		}).fail(function() {
-			showInfowindow();
+			self.showInfowindow();
 		});
 	};
 
