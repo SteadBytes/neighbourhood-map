@@ -230,7 +230,10 @@ var ViewModel = function() {
 		});
 	};
 };
-var appViewModel = new ViewModel();
-// When query changes, filterLocations is called
-appViewModel.query.subscribe(appViewModel.filterLocations);
-ko.applyBindings(appViewModel);
+
+var init = function() {
+	var appViewModel = new ViewModel();
+	// When query changes, filterLocations is called
+	appViewModel.query.subscribe(appViewModel.filterLocations);
+	ko.applyBindings(appViewModel);
+}
