@@ -3,7 +3,7 @@
 ----------------------------
 Application for viewing locations and their information for a neighbourhood/area using [Knockout.js](http://knockoutjs.com/index.html) for  MVVM app structure.
 
-Live example at https://steadbytes.github.io/udacity-fsnd-neighbourhood-map/
+Live example at https://steadbytes.github.io/neighbourhood-map/
 
 ## Features:
 * Google [Maps API](https://developers.google.com/maps/) 🗺
